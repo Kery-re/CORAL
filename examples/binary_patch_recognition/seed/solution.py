@@ -11,7 +11,7 @@ import math
 import re
 from collections import Counter
 
-TOKEN_RE = re.compile(r"[a-zA-Z0-9_+\-]+")
+TOKEN_PATTERN = re.compile(r"[a-zA-Z0-9_+\-]+")
 
 _token_weights: dict[str, float] = {}
 _bias: float = 0.0
@@ -44,7 +44,7 @@ NEGATIVE_HINTS = {
 
 
 def _tokenize(text: str) -> list[str]:
-    return [t.lower() for t in TOKEN_RE.findall(text)]
+    return [t.lower() for t in TOKEN_PATTERN.findall(text)]
 
 
 def _extract_tokens(sample: dict) -> list[str]:
@@ -53,8 +53,10 @@ def _extract_tokens(sample: dict) -> list[str]:
     context = str(sample.get("context", ""))
     before_tokens = _tokenize(before)
     after_tokens = _tokenize(after)
-    added = [t for t in after_tokens if t not in set(before_tokens)]
-    removed = [t for t in before_tokens if t not in set(after_tokens)]
+    before_set = set(before_tokens)
+    after_set = set(after_tokens)
+    added = [t for t in after_tokens if t not in before_set]
+    removed = [t for t in before_tokens if t not in after_set]
     return (
         [f"after:{t}" for t in after_tokens]
         + [f"add:{t}" for t in added]
@@ -70,7 +72,7 @@ def train(samples: list[dict], labels: list[int]) -> None:
     neg_counts = Counter()
     pos_n = 0
     neg_n = 0
-    for sample, label in zip(samples, labels, strict=False):
+    for sample, label in zip(samples, labels):
         feats = set(_extract_tokens(sample))
         if int(label) == 1:
             pos_n += 1

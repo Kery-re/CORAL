@@ -37,6 +37,7 @@ class Grader(TaskGrader):
             hidden_path = {str(hidden_path)!r}
             fpr_target = {fpr_target}
             latency_target_ms = {latency_target_ms}
+            min_latency_target_ms = 1e-3
 
             def _load_jsonl(path):
                 rows = []
@@ -66,7 +67,7 @@ class Grader(TaskGrader):
 
             def _binary_stats(labels, scores, threshold=0.5):
                 tp = fp = tn = fn = 0
-                for y, s in zip(labels, scores, strict=False):
+                for y, s in zip(labels, scores, strict=True):
                     pred = 1 if s >= threshold else 0
                     if y == 1 and pred == 1:
                         tp += 1
@@ -83,8 +84,8 @@ class Grader(TaskGrader):
                 return precision, recall, f1, fpr
 
             def _roc_auc(labels, scores):
-                pos = [s for y, s in zip(labels, scores, strict=False) if y == 1]
-                neg = [s for y, s in zip(labels, scores, strict=False) if y == 0]
+                pos = [s for y, s in zip(labels, scores, strict=True) if y == 1]
+                neg = [s for y, s in zip(labels, scores, strict=True) if y == 0]
                 if not pos or not neg:
                     return 0.5
                 wins = 0.0
@@ -153,8 +154,8 @@ class Grader(TaskGrader):
             auc = _roc_auc(hidden_labels, scores)
             recall_low_fpr = _recall_at_fpr(hidden_labels, scores, fpr_target)
 
-            per_sample_ms = elapsed_ms / max(1, len(hidden_samples))
-            latency_score = max(0.0, min(1.0, 1.0 - (per_sample_ms / max(1e-6, latency_target_ms))))
+            per_sample_ms = elapsed_ms / len(hidden_samples)
+            latency_score = math.exp(-per_sample_ms / max(latency_target_ms, min_latency_target_ms))
 
             final_score = (
                 0.55 * f1
