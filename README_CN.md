@@ -277,6 +277,7 @@ coral/
 | **mnist** | 机器学习 | 手写数字识别 |
 | **spaceship_titanic** | 机器学习 | Kaggle 竞赛 |
 | **stanford_covid_vaccine** | 生物/ML | mRNA 降解预测 |
+| **binary_patch_recognition** | 安全/ML | 二进制安全补丁识别 |
 
 
 ### 开发

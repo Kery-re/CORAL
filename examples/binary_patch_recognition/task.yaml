@@ -1,0 +1,50 @@
+task:
+  name: "Binary Security Patch Recognition"
+  description: |
+    Build a detector that identifies whether a binary diff corresponds to a
+    security patch.
+
+    You are given structured records containing:
+      - before: pseudo-disassembly snippet before patch
+      - after: pseudo-disassembly snippet after patch
+      - context: optional symbol/context metadata
+
+    Your program file `solution.py` must implement:
+      - predict(samples: list[dict]) -> list[float]
+      - optional train(samples: list[dict], labels: list[int]) -> None
+
+    The grader trains (if train() exists) on a development split and evaluates
+    on a hidden split. Each prediction is a score/probability in [0, 1], where
+    higher means "more likely to be a security patch".
+
+    Composite score (maximize):
+      0.55 * F1@0.5 + 0.25 * Recall@FPR<=0.10 + 0.15 * ROC-AUC + 0.05 * latency_score
+
+  tips: |
+    - Keep predict() deterministic and fast.
+    - Use lexical diff features from before/after (e.g. bounds checks, sanitizers, auth checks).
+    - train() is optional but can calibrate thresholds/weights using dev labels.
+    - Invalid outputs (wrong length, NaN, non-numeric) receive failure score.
+    - Hidden split is used for final score to reduce overfitting.
+
+grader:
+  timeout: 120
+  direction: maximize
+  args:
+    program_file: "solution.py"
+    fpr_target: 0.10
+    latency_target_ms: 15.0
+
+agents:
+  count: 1
+  runtime: claude_code
+  model: claude-sonnet-4-6
+
+workspace:
+  results_dir: "./results"
+  repo_path: "./examples/binary_patch_recognition/seed"
+
+run:
+  verbose: false
+  ui: false
+  session: tmux

@@ -1,0 +1,14 @@
+{"id":"hid-001","before":"strcpy(dst, src);","after":"strncpy(dst, src, dst_size); sanitize(dst_size);","context":"rpc::decode_name","label":1}
+{"id":"hid-002","before":"copy(buf, in, l);","after":"if (l <= cap) copy(buf, in, l); else return ERR; bounds_check","context":"codec::frame_copy","label":1}
+{"id":"hid-003","before":"obj = table[id]; use(obj);","after":"if (id < 0 || id >= n) return ERR; obj = table[id]; use(obj); validate","context":"jit::lookup","label":1}
+{"id":"hid-004","before":"if (token) accept();","after":"if (token && auth_check(token)) accept();","context":"gateway::session","label":1}
+{"id":"hid-005","before":"p = get(); p->v = 1;","after":"p = get(); if (!p) return; p->v = 1; null_check","context":"cache::touch","label":1}
+{"id":"hid-006","before":"memcpy(dst, src, n);","after":"n = clamp(n, 0, cap); memmove(dst, src, n);","context":"audio::mix","label":1}
+{"id":"hid-007","before":"sum += v[i];","after":"sum += v[i]; logging(sum);","context":"stats::accumulate","label":0}
+{"id":"hid-008","before":"run_step();","after":"run_step(); // comment tidy","context":"engine::loop","label":0}
+{"id":"hid-009","before":"ctx->flag = 1;","after":"context->flag = 1; rename refactor","context":"scheduler::tick","label":0}
+{"id":"hid-010","before":"if (ok) call();","after":"if (ok) call(); perf_tune inline","context":"executor::invoke","label":0}
+{"id":"hid-011","before":"read(fd, b, 64);","after":"read(fd, b, 64); trace id log","context":"io::read_once","label":0}
+{"id":"hid-012","before":"a = b + c;","after":"a = b + c; format cleanup","context":"math::fuse","label":0}
+{"id":"hid-013","before":"node = node->next;","after":"if (!node) return; node = node->next;","context":"graph::walk","label":1}
+{"id":"hid-014","before":"buf[idx] = x;","after":"if (idx < max) buf[idx] = x; else return; length_check","context":"vm::store","label":1}

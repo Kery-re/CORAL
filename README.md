@@ -398,6 +398,7 @@ Ready-to-run task configurations in `examples/`:
 | **mnist**                  | ML           | Handwritten digit classification                            |
 | **spaceship_titanic**      | ML           | Kaggle competition                                          |
 | **stanford_covid_vaccine** | Bio/ML       | mRNA degradation prediction                                 |
+| **binary_patch_recognition** | Security/ML | Binary security patch recognition                           |
 
 
 ### Development

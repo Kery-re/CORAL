@@ -1,0 +1,14 @@
+{"id":"dev-001","before":"strcpy(buf, src);","after":"strncpy(buf, src, size); bounds_check(size);","context":"net_parser.c::parse_packet","label":1}
+{"id":"dev-002","before":"memcpy(dst, in, len);","after":"if (len <= dst_cap) memmove(dst, in, len);","context":"image_decode::copy_line","label":1}
+{"id":"dev-003","before":"ptr->next = node;","after":"if (ptr != NULL) ptr->next = node; null_check","context":"list_ops::append","label":1}
+{"id":"dev-004","before":"if (user) login();","after":"if (user && permission_check(user)) login(); auth_check","context":"auth::session","label":1}
+{"id":"dev-005","before":"idx = input; arr[idx] = 1;","after":"idx = clamp(input, 0, max_idx); validate(idx); arr[idx] = 1;","context":"vm::opcode_dispatch","label":1}
+{"id":"dev-006","before":"u = get_user(id); use(u->name);","after":"u = get_user(id); if (!u) return ERR; use(u->name);","context":"profile::render","label":1}
+{"id":"dev-007","before":"hash = fn(data);","after":"hash = fn(data); // refactor naming only","context":"crypto::digest","label":0}
+{"id":"dev-008","before":"tmp = a + b;","after":"tmp = a + b; logging(trace_id);","context":"metrics::collect","label":0}
+{"id":"dev-009","before":"for i in range(n): x+=i","after":"for i in range(n): x+=i # comment cleanup","context":"math::sum","label":0}
+{"id":"dev-010","before":"open(path);","after":"open(path); format code style","context":"fs::open","label":0}
+{"id":"dev-011","before":"state = init();","after":"state = init(); rename variable state->ctx","context":"pipeline::init","label":0}
+{"id":"dev-012","before":"if (x) run();","after":"if (x) run(); perf_tune branch hint","context":"runner::exec","label":0}
+{"id":"dev-013","before":"buf[n] = 0;","after":"if (n < cap) buf[n] = 0; else return ERR; length_check","context":"http::header_parse","label":1}
+{"id":"dev-014","before":"free(obj); obj = next;","after":"if (obj) free(obj); obj = next; uaf mitigation","context":"allocator::drain","label":1}
